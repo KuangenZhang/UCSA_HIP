@@ -72,7 +72,7 @@ class UnalignedDataLoader():
             shuffle=True,
             num_workers=0)
 
-        print('Source shape: {}, target shape: {}'.format(len(data_loader_s), len(data_loader_t)))
+        # print('Source shape: {}, target shape: {}'.format(len(data_loader_s), len(data_loader_t)))
         self.dataset_s = dataset_source
         self.dataset_t = dataset_target
         self.paired_data = PairedData(data_loader_s, data_loader_t,

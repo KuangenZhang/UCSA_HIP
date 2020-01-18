@@ -1,6 +1,54 @@
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+import zipfile
+import requests
+
+def download():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(base_dir, '../../data')
+    if not os.path.exists(data_dir):
+        download_unzip_drive_file(file_id = '1ngdXXDiJimT9bPdskY_Bn07vA3zC3ilL', file_name='data.zip')
+    checkpoint_dir = os.path.join(base_dir, '../../checkpoint')
+    if not os.path.exists(checkpoint_dir):
+        download_unzip_drive_file(file_id='1h2ePusK8NfoWyqhTllcKxmkvxYGJ2O2D', file_name='checkpoint.zip')
+
+def download_unzip_drive_file(file_id, file_name):
+    download_file_from_google_drive(file_id, file_name)
+    with zipfile.ZipFile(file_name, "r") as zip_ref:
+        zip_ref.extractall('')
+    os.system('rm %s' % (file_name))
+
+
+def download_file_from_google_drive(id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+    session = requests.Session()
+
+    response = session.get(URL, params = { 'id' : id }, stream = True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = { 'id' : id, 'confirm' : token }
+        response = session.get(URL, params = params, stream = True)
+
+    save_response_content(response, destination)
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+
+    return None
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+
 
 def weights_init(m):
     classname = m.__class__.__name__

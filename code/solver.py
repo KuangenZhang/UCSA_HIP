@@ -7,7 +7,7 @@ import numpy as np
 from torch.autograd import Variable
 from model.build_gen import Generator, Classifier
 from datasets.dataset_read import dataset_read
-
+from utils.utils import download
 # Training settings
 class Solver(object):
     def __init__(self, args, batch_size=64, source='source',
@@ -23,8 +23,10 @@ class Solver(object):
         self.save_epoch = save_epoch
         self.use_abs_diff = args.use_abs_diff
         self.leave_one_num = leave_one_num
-        
+
+
         print('dataset loading')
+        download()
         self.data_train, self.data_val, self.data_test = dataset_read(
                 source, target, self.batch_size, is_resize = args.is_resize,
                 leave_one_num = self.leave_one_num, dataset = args.dataset, 
@@ -348,10 +350,6 @@ class Solver(object):
         return correct_all.numpy() / size_all        
     
     def test_ensemble(self, G, C1, C2):
-        self.data_train, self.data_val, self.data_test = dataset_read(
-            self.source, self.target, 128, self.args.is_resize,
-            leave_one_num=self.leave_one_num, dataset=self.args.dataset,
-            sensor_num=self.args.sensor_num)
         G.eval()
         C1.eval()
         C2.eval()

@@ -7,7 +7,7 @@ import numpy as np
 from torch.autograd import Variable
 from model.build_gen import Generator, Classifier, DomainClassifier
 from datasets.dataset_read import dataset_read
-
+from utils.utils import download
 # Training settings
 class SolverDANN(object):
     def __init__(self, args, batch_size=64, source='source',
@@ -25,6 +25,7 @@ class SolverDANN(object):
         self.leave_one_num = leave_one_num
         
         print('dataset loading')
+        download()
         self.data_train, self.data_val, self.data_test = dataset_read(
                 source, target, self.batch_size, is_resize = args.is_resize,
                 leave_one_num = self.leave_one_num, dataset = args.dataset, 
