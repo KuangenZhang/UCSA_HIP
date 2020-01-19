@@ -18,9 +18,6 @@ def classify(args, leave_one_num = -1):
     # if not args.one_step:
     torch.cuda.empty_cache()
 
-    if args.eval_only:
-        args.batch_size = 1
-
     solver = SolverDANN(args, source=args.source, target=args.target,
                     learning_rate=args.lr, batch_size=args.batch_size,
                     optimizer=args.optimizer, num_k=args.num_k, 
@@ -57,11 +54,8 @@ def classify(args, leave_one_num = -1):
                 acc, epoch, size, G, C1, C2 = solver.test(
                         t, record_file=record_test, save_model=args.save_model)
                 end = time.time()
-                print('Forward time for each segment:%.10f'
-                      % ((end - start)/(size + 0.0)))
                 is_best = acc > best_acc
                 best_acc = max(acc, best_acc)
-                print(t)
                 if is_best:
                     print('Best validation acc:', 100.0 * best_acc,'%')
                     torch.save(G, '%s/best_model_G' % (args.checkpoint_dir) + model_name +'.pt')
@@ -92,8 +86,9 @@ def main(args):
 
 if __name__ == '__main__':
     # Training settings
-    parser = argparse.ArgumentParser(description='PyTorch MCD Implementation')
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--eval_only', default=False,
+                        help='evaluation only option')
     parser.add_argument('--dataset', type=str, default='NW', metavar='N',
                         help='Dataset is NW or UCI?')
     parser.add_argument('--sensor_num', type=int, default=0, metavar='N',
@@ -115,8 +110,6 @@ if __name__ == '__main__':
                         help='input batch size for training (default: 64)')
     parser.add_argument('--checkpoint_dir', type=str, default=r'checkpoint_DANN', metavar='N',
                         help='source only or not')
-    parser.add_argument('--eval_only', type=str, default='True',
-                        help='evaluation only option')
     parser.add_argument('--lr', type=float, default=0.0002, metavar='LR',
                         help='learning rate (default: 0.0002)')
     parser.add_argument('--max_epoch', type=int, default=50, metavar='N',
@@ -142,13 +135,13 @@ if __name__ == '__main__':
     parser.add_argument('--use_abs_diff', action='store_true', default=False,
                         help='use absolute difference value as a measurement')
     args = parser.parse_args()
+
     args.eval_only = (args.eval_only == 'True')
+
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     torch.manual_seed(args.seed)
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
-    print(args)
-
     # args.dataset = 'UCI'
     # args.is_source_only = False
     #

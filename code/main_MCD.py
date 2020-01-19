@@ -18,10 +18,6 @@ def classify(args, leave_one_num = -1):
     # if not args.one_step:
     torch.cuda.empty_cache()
 
-    if args.eval_only:
-        # change batch_size to 1 to evaluate the forward time.
-        args.batch_size = 128
-
     solver = Solver(args, source=args.source, target=args.target, 
                     learning_rate=args.lr, batch_size=args.batch_size,
                     optimizer=args.optimizer, num_k=args.num_k, 
@@ -111,7 +107,6 @@ def main(args):
 if __name__ == '__main__':
     # Training settings
     parser = argparse.ArgumentParser()
-
     parser.add_argument('--dataset', type=str, default='NW', metavar='N',
                         help='Dataset is NW or UCI?')
     parser.add_argument('--sensor_num', type=int, default=0, metavar='N',
@@ -133,7 +128,7 @@ if __name__ == '__main__':
                         help='input batch size for training (default: 64)')
     parser.add_argument('--checkpoint_dir', type=str, default=r'checkpoint', metavar='N',
                         help='source only or not')
-    parser.add_argument('--eval_only', type=str, default='True',
+    parser.add_argument('--eval_only', default=False,
                         help='evaluation only option')
     parser.add_argument('--lr', type=float, default=0.0002, metavar='LR',
                         help='learning rate (default: 0.0002)')

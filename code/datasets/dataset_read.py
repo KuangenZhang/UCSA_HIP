@@ -60,5 +60,5 @@ def dataset_read(source, target, batch_size, is_resize = False,
     final_test_loader.initialize(S_test, T_test, batch_size, batch_size)
     # final_test_loader.initialize(T_test, S_test, batch_size, batch_size)
     data_test = final_test_loader.load_data()
-    
+    print('Target test shape: {}'.format(T_test['labels'].shape))
     return data_train, data_val, data_test

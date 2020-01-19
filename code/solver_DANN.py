@@ -231,10 +231,6 @@ class SolverDANN(object):
         return correct_all.numpy() / size_all
     
     def test_ensemble(self, G, LC, DC):
-        self.data_train, self.data_val, self.data_test = dataset_read(
-            self.source, self.target, 128, self.args.is_resize,
-            leave_one_num=self.leave_one_num, dataset=self.args.dataset,
-            sensor_num=self.args.sensor_num)
         G.eval()
         LC.eval()
         DC.eval()
