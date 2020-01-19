@@ -132,7 +132,7 @@ if __name__ == '__main__':
                         help='evaluation only option')
     parser.add_argument('--lr', type=float, default=0.0002, metavar='LR',
                         help='learning rate (default: 0.0002)')
-    parser.add_argument('--max_epoch', type=int, default=50, metavar='N',
+    parser.add_argument('--max_epoch', type=int, default=100, metavar='N',
                         help='how many epochs')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
