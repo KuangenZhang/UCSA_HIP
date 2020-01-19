@@ -1,4 +1,7 @@
 ## Unsupervised Cross-subject Adaptation for Predicting Human Locomotion Intent
+
+<img src='./overview.png' width=800>
+
 This is the implementation of Unsupervised Cross-subject Adaptation for Predicting Human Locomotion Intent in Pytorch.
 
 ## Getting Started
